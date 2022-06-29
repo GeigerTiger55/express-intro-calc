@@ -1,11 +1,20 @@
-const { BadRequestError } = require("./expressError");
+"use strict";
 
+const { BadRequestError } = require("./expressError");
 
 /** Convert strNums like ["1","2","3"] to [1, 2, 3]. */
 
 function convertStrNums(strNums) {
-  // if the conversion isn't successful, throw a BadRequestError and will
-  // be handled in your route
+  let numsArr = [];
+  for(let str of strNums){
+    let num = Number(str);
+    if(isNaN(num)){
+      throw new BadRequestError(`${str} is not a number`);
+    }
+    numsArr.push(num);
+  }
+
+  return numsArr;
 }
 
 

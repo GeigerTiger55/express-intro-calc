@@ -3,35 +3,63 @@
 
 const express = require("express");
 const app = express();
-const { findMean, findMode, findMedian} = require("./stats");
+const { findMean, findMode, findMedian } = require("./stats");
+const { convertStrNums } = require("./utils");
 
 // useful error class to throw
-const { NotFoundError } = require("./expressError");
+const { NotFoundError, BadRequestError } = require("./expressError");
 
 const MISSING = "Expected key `nums` with comma-separated list of numbers.";
 
 
 /** Finds mean of nums in qs: returns {operation: "mean", result } */
 app.get('/mean/:nums', function (req, res){
-  let numsArr = req.params.nums.split(",");
-  mean = findMean(numsArr);
-  return res.json({"mean" : mean});
+  let numsStrArr = req.params.nums.split(",");
+
+  const mean = findMean(convertStrNums(numsStrArr));
+  return res.json({response: {
+    operation : "mean",
+    value: mean,
+  }});
+});
+
+/** Throws Bad Request Error if not parameters are passed to "meadn" */
+app.get('/mean', function (req, res){
+    throw new BadRequestError("Numbers are required");
 });
 
 
 /** Finds median of nums in qs: returns {operation: "median", result } */
 app.get('/median/:nums', function (req, res){
-  let numsArr = req.params.nums.split(",");
-  median = findMedian(numsArr);
-  return res.json({"median" : median});
+  let numsStrArr = req.params.nums.split(",");
+
+  const median = findMedian(convertStrNums(numsStrArr));
+  return res.json({response: {
+    operation : "median",
+    value: median,
+  }});
+});
+
+/** Throws Bad Request Error if not parameters are passed to "median" */
+app.get('/median', function (req, res){
+  throw new BadRequestError("Numbers are required");
 });
 
 
 /** Finds mode of nums in qs: returns {operation: "mode", result } */
 app.get('/mode/:nums', function (req, res){
-  let numsArr = req.params.nums.split(",");
-  mode = findMode(numsArr);
-  return res.json({"mode" : mode});
+  let numsStrArr = req.params.nums.split(",");
+
+  const mode = findMode(convertStrNums(numsStrArr));
+  return res.json({response: {
+    operation : "mode",
+    value: mode,
+  }});
+});
+
+/** Throws Bad Request Error if not parameters are passed to "mode" */
+app.get('/mode', function (req, res){
+  throw new BadRequestError("Numbers are required");
 });
 
 
